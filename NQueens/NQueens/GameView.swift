@@ -67,11 +67,14 @@ struct GameView: View {
     }
     
     private func handleTap(x: Int, y: Int, game: GameEngineImpl) {
-        
+
     }
     
     private func newGame(size: Int) {
-        
+        let newGame = GameEngineImpl(boardSize: boardSize)
+        game = newGame
+        currentBoard = newGame.currentBoard
+        queenPositions = []
     }
     
     private func restart() {
