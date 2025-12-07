@@ -12,34 +12,30 @@ struct ChessBoardView: View {
     let queens: [Position]
     let onTap: (Int, Int) -> Void
     
+    private var size: Int {
+        moves.count
+    }
+    
+    private var columns: [GridItem] {
+        Array(repeating: GridItem(.flexible()), count: size)
+    }
+    
     var body: some View {
         LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible()), count: moves.count),
+            columns: columns,
             spacing: 2
         ) {
-            ForEach(0..<moves.count * moves.count, id: \.self) { index in
-                let i = index / moves.count
-                let j = index % moves.count
+            ForEach(0..<size * size, id: \.self) { index in
+                let i = index / size
+                let j = index % size
                 
                 let isQueen = queens.contains(where: { $0.x == i && $0.y == j })
                 let isMove = moves[i][j] == 1
                 
-                ZStack {
-                    
-                    Rectangle()
-                        .fill(isMove ? Color.green.opacity(0.45) :
-                                (i + j).isMultiple(of: 2)
-                              ? Color.gray.opacity(0.3)
-                              : Color.gray.opacity(0.1))
-                    
-                    if isQueen {
-                        Text("♛")
-                            .font(.system(size: 24))
-                    }
-                    
-                }
-                .aspectRatio(1, contentMode: .fit)
-                .onTapGesture {
+                ChessSquareView(row: i,
+                                column: j,
+                                isQueen: isQueen,
+                                isMove: isMove) {
                     onTap(i, j)
                 }
             }
