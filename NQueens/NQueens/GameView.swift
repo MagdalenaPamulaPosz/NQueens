@@ -67,7 +67,24 @@ struct GameView: View {
     }
     
     private func handleTap(x: Int, y: Int, game: GameEngineImpl) {
-
+        let position = Position(x: x, y: y)
+        
+        if queenPositions.contains(where: { $0 == position }) {
+            let result = game.remove(at: position)
+            currentBoard = result.newBoard
+            queenPositions = result.occupiedPositions
+            return
+        }
+        
+        guard queenPositions.count < boardSize else { return }
+        
+        do {
+            let result = try game.place(figure: QueenFigure(position: position))
+            currentBoard = result.newBoard
+            queenPositions = result.occupiedPositions
+        } catch {
+            // shake
+        }
     }
     
     private func newGame(size: Int) {
