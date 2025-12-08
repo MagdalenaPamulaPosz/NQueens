@@ -12,7 +12,7 @@ struct GameView: View {
     @State private var currentBoard: [[Int]] = []
     @State private var queenPositions: [Position] = []
     
-    @State private var boardSize: Int = 8
+    @State private var boardSize: Int = 4
     @State private var shouldShowWinScreen = false
     
     @State private var startDate: Date?
@@ -86,6 +86,11 @@ struct GameView: View {
             .onReceive(timer) { date in
                 now = date
             }
+            .sheet(isPresented: $shouldShowWinScreen) {
+                WinScreenView(boardSize: boardSize,
+                              elapsed: lastElapsed,
+                              bestTime: bestTimes[boardSize])
+            }
         }
     }
     
@@ -105,6 +110,7 @@ struct GameView: View {
             let result = try game.place(figure: QueenFigure(position: position))
             currentBoard = result.newBoard
             queenPositions = result.occupiedPositions
+            checkIfWin()
         } catch {
             // shake
         }
@@ -158,6 +164,30 @@ struct GameView: View {
         let userDefaults = UserDefaults.standard
         if let encoded = try? JSONEncoder().encode(bestTimes) {
             userDefaults.set(encoded, forKey: bestTimesKey)
+        }
+    }
+    
+    private func checkIfWin() {
+        guard queenPositions.count == boardSize else { return }
+        finishGame()
+    }
+    
+    private func finishGame() {
+        guard let start = startDate else { return }
+        let elapsed = Date().timeIntervalSince(start)
+        lastElapsed = elapsed
+        startDate = nil
+        
+        if let bestTime = bestTimes[boardSize] {
+            if elapsed < bestTime {
+                if elapsed < bestTime {
+                    bestTimes[boardSize] = elapsed
+                }
+            } else {
+                bestTimes[boardSize] = elapsed
+            }
+            saveBestTimes()
+            shouldShowWinScreen = true
         }
     }
 }
