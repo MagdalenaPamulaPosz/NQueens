@@ -89,7 +89,10 @@ struct GameView: View {
             .sheet(isPresented: $shouldShowWinScreen) {
                 WinScreenView(boardSize: boardSize,
                               elapsed: lastElapsed,
-                              bestTime: bestTimes[boardSize])
+                              bestTime: bestTimes[boardSize]) {
+                    newGame(size: boardSize)
+                    shouldShowWinScreen = false
+                }
             }
         }
     }

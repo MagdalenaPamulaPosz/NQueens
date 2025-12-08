@@ -12,6 +12,8 @@ struct WinScreenView: View {
     let elapsed: TimeInterval?
     let bestTime: TimeInterval?
     
+    let onPlayAgain: () -> Void
+    
     @State private var animate = false
     
     var body: some View {
@@ -38,6 +40,18 @@ struct WinScreenView: View {
                     Text("Best time: \(String(format: "%.2f", bestTime)) seconds")
                         .font(.headline)
                 }
+                
+                Button {
+                    onPlayAgain()
+                } label: {
+                    Text("Play again :)")
+                        .font(.headline)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .padding(.top, 20)
             }
             .onAppear {
                 animate = true
