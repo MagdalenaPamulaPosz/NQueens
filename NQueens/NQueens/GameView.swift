@@ -15,6 +15,16 @@ struct GameView: View {
     @State private var boardSize: Int = 8
     @State private var shouldShowWinScreen = false
     
+    @State private var startDate: Date?
+    @State private var now = Date()
+    @State private var lastElapsed: TimeInterval?
+    
+    @State private var bestTimes: [Int: TimeInterval] = [:]
+    
+    private let timer = Timer.publish(every: 1, on : .main, in: .common).autoconnect()
+    
+    private let bestTimesKey = "BestTimesForNQueens"
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
@@ -27,6 +37,15 @@ struct GameView: View {
                         Text("Left \(max(0, boardSize - queenPositions.count))")
                     }
                     .font(.subheadline)
+                    
+                    HStack(spacing: 12) {
+                        Text("Time: \(timeString())")
+                        if let bestTime = bestTimes[boardSize] {
+                            Text("Best: \(format(interval: bestTime))")
+                        }
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -59,9 +78,13 @@ struct GameView: View {
             .padding()
             .navigationTitle("N-Queens Puzzle")
             .onAppear {
+                loadBestTimes()
                 if game == nil {
                     newGame(size: boardSize)
                 }
+            }
+            .onReceive(timer) { date in
+                now = date
             }
         }
     }
@@ -92,6 +115,9 @@ struct GameView: View {
         game = newGame
         currentBoard = newGame.currentBoard
         queenPositions = []
+        
+        startDate = Date()
+        lastElapsed = nil
     }
     
     private func restart() {
@@ -99,5 +125,39 @@ struct GameView: View {
         game.reset()
         currentBoard = game.currentBoard
         queenPositions = []
+        
+        startDate = Date()
+        lastElapsed = nil
+    }
+    
+    private func timeString() -> String {
+        if let lastElapsed {
+            return format(interval: lastElapsed)
+        }
+        
+        guard let start = startDate else { return "--:--" }
+        return format(interval: now.timeIntervalSince(start))
+    }
+    
+    private func format(interval: TimeInterval) -> String {
+        let total = Int(interval.rounded())
+        let minutes = total / 60
+        let seconds = total % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    private func loadBestTimes() {
+        let userDefaults = UserDefaults.standard
+        guard let data = userDefaults.data(forKey: bestTimesKey) else { return }
+        if let decoded = try? JSONDecoder().decode([Int: TimeInterval].self, from: data) {
+            bestTimes = decoded
+        }
+    }
+    
+    private func saveBestTimes() {
+        let userDefaults = UserDefaults.standard
+        if let encoded = try? JSONEncoder().encode(bestTimes) {
+            userDefaults.set(encoded, forKey: bestTimesKey)
+        }
     }
 }
