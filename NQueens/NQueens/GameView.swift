@@ -95,6 +95,9 @@ struct GameView: View {
     }
     
     private func restart() {
-        
+        guard let game = game else { return }
+        game.reset()
+        currentBoard = game.currentBoard
+        queenPositions = []
     }
 }
