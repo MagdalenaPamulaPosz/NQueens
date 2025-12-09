@@ -12,6 +12,7 @@ struct ChessSquareView: View {
     let column: Int
     let isQueen: Bool
     let isMove: Bool
+    let cellSize: CGFloat
     let onTap: () -> Void
     
     var body: some View {
@@ -30,7 +31,7 @@ struct ChessSquareView: View {
                 .fill(backgroundColor)
             
             Text("♛")
-                .font(.system(size: 24))
+                .font(.system(size: cellSize * 0.7))
                 .scaleEffect(isQueen ? 1.0 : 0.5)
                 .opacity(isQueen ? 1 : 0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.6),
