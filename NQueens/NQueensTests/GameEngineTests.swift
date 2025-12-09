@@ -65,10 +65,10 @@ final class GameEngineTests: XCTestCase {
         let engine = GameEngineImpl(boardSize: 4)
         
         let pos1 = Position(x: 0, y: 0)
-        let pos2 = Position(x: 3, y: 3)
+        let pos2 = Position(x: 3, y: 1)
         
-        try engine.place(figure: QueenFigure(position: pos1))
-        try engine.place(figure: QueenFigure(position: pos2))
+        _ = try engine.place(figure: QueenFigure(position: pos1))
+        _ = try engine.place(figure: QueenFigure(position: pos2))
         
         let result = engine.remove(at: pos1)
         
