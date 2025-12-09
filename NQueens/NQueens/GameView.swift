@@ -25,22 +25,48 @@ struct GameView: View {
     
     private let bestTimesKey = "BestTimesForNQueens"
     
+    private let minTapSize: CGFloat = 44
+    private let horizontalPadding: CGFloat = 32
+    
+    private var maxBoardSize: Int {
+        let screenWidth = UIScreen.main.bounds.width
+        let availableWidth = screenWidth - 2 * horizontalPadding
+        let n = Int(floor(availableWidth / minTapSize))
+        return max(4, n)
+    }
+    
+    private var effectiveBoardSize: Int {
+        game?.boardSize ?? boardSize
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
+                
+                HStack {
+                    Text("Board size: \(effectiveBoardSize) x \(effectiveBoardSize)")
+                        .font(.headline)
+                    Spacer()
+                    Stepper(
+                        "",
+                        value: $boardSize,
+                        in: 4...maxBoardSize
+                    )
+                }
+                
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Place \(boardSize) queens on the board. None of them can attack each other")
                         .font(.subheadline)
                     
                     HStack(spacing: 12) {
                         Text("Placed \(queenPositions.count)")
-                        Text("Left \(max(0, boardSize - queenPositions.count))")
+                        Text("Left \(max(0, effectiveBoardSize - queenPositions.count))")
                     }
                     .font(.subheadline)
                     
                     HStack(spacing: 12) {
                         Text("Time: \(timeString())")
-                        if let bestTime = bestTimes[boardSize] {
+                        if let bestTime = bestTimes[effectiveBoardSize] {
                             Text("Best: \(format(interval: bestTime))")
                         }
                     }
@@ -55,9 +81,12 @@ struct GameView: View {
                         handleTap(x: x, y: y, game: game)
                     }
                 } else {
-                    Text("Tap 'New Game' to start.")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .foregroundStyle(.secondary)
+                    VStack {
+                        Text("Choose a board size and tap 'New Game' to start.")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 
                 HStack {
@@ -79,18 +108,15 @@ struct GameView: View {
             .navigationTitle("N-Queens Puzzle")
             .onAppear {
                 loadBestTimes()
-                if game == nil {
-                    newGame(size: boardSize)
-                }
             }
             .onReceive(timer) { date in
                 now = date
             }
             .sheet(isPresented: $shouldShowWinScreen) {
-                WinScreenView(boardSize: boardSize,
+                WinScreenView(boardSize: effectiveBoardSize,
                               elapsed: lastElapsed,
-                              bestTime: bestTimes[boardSize]) {
-                    newGame(size: boardSize)
+                              bestTime: bestTimes[effectiveBoardSize]) {
+                    newGame(size: effectiveBoardSize)
                     shouldShowWinScreen = false
                 }
             }
@@ -107,7 +133,7 @@ struct GameView: View {
             return
         }
         
-        guard queenPositions.count < boardSize else { return }
+        guard queenPositions.count < effectiveBoardSize else { return }
         
         do {
             let result = try game.place(figure: QueenFigure(position: position))
@@ -171,7 +197,7 @@ struct GameView: View {
     }
     
     private func checkIfWin() {
-        guard queenPositions.count == boardSize else { return }
+        guard queenPositions.count == effectiveBoardSize else { return }
         finishGame()
     }
     
@@ -181,16 +207,14 @@ struct GameView: View {
         lastElapsed = elapsed
         startDate = nil
         
-        if let bestTime = bestTimes[boardSize] {
+        if let bestTime = bestTimes[effectiveBoardSize] {
             if elapsed < bestTime {
-                if elapsed < bestTime {
-                    bestTimes[boardSize] = elapsed
-                }
-            } else {
-                bestTimes[boardSize] = elapsed
+                bestTimes[effectiveBoardSize] = elapsed
             }
-            saveBestTimes()
-            shouldShowWinScreen = true
+        } else {
+            bestTimes[effectiveBoardSize] = elapsed
         }
+        saveBestTimes()
+        shouldShowWinScreen = true
     }
 }
