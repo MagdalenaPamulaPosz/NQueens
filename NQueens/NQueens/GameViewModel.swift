@@ -25,6 +25,7 @@ final class GameViewModel: ObservableObject {
     @Published var shakeValue: CGFloat = 0
     
     private let bestTimesKey = "BestTimesForNQueens"
+    private let feedbackProvider: FeedbackProviderProtocol
     
     let minTapSize: CGFloat = 44
     let horizontalPadding: CGFloat = 32
@@ -40,7 +41,8 @@ final class GameViewModel: ObservableObject {
         game?.boardSize ?? boardSize
     }
     
-    init() {
+    init(feedbackProvider: FeedbackProviderProtocol = FeedbackProvider()) {
+        self.feedbackProvider = feedbackProvider
         loadBestTimes()
     }
     
@@ -52,7 +54,7 @@ final class GameViewModel: ObservableObject {
             let result = game.remove(at: position)
             currentBoard = result.newBoard
             queenPositions = result.occupiedPositions
-            SoundManager.shared.playSound(fileName: "whoosh-cinematic")
+            feedbackProvider.playRemove()
             return
         }
         
@@ -62,16 +64,14 @@ final class GameViewModel: ObservableObject {
             let result = try game.place(figure: QueenFigure(position: position))
             currentBoard = result.newBoard
             queenPositions = result.occupiedPositions
-            SoundManager.shared.playSound(fileName: "ui-click")
+            feedbackProvider.playPlace()
             checkIfWin()
         } catch {
             withAnimation(.default) {
                 shakeValue += 1
             }
-            let generator = UINotificationFeedbackGenerator()
-            generator.notificationOccurred(.error)
-            
-            SoundManager.shared.playSound(fileName: "error")
+            feedbackProvider.notifyError()
+            feedbackProvider.playError()
         }
     }
     
@@ -118,10 +118,8 @@ final class GameViewModel: ObservableObject {
         }
         saveBestTimes()
         
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
-        
-        SoundManager.shared.playSound(fileName: "level-up")
+        feedbackProvider.notifySuccess()
+        feedbackProvider.playWin()
         
         shouldShowWinScreen = true
     }
