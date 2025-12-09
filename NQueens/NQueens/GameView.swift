@@ -38,7 +38,7 @@ struct GameView: View {
     
     private var sizeControl: some View {
         HStack {
-            Text("Board size: \(viewModel.effectiveBoardSize)")
+            Text("Board size: \(viewModel.boardSize)")
                 .font(.headline)
             Spacer()
             Stepper(
@@ -56,7 +56,7 @@ struct GameView: View {
             
             HStack(spacing: 12) {
                 Text("Placed \(viewModel.queenPositions.count)")
-                Text("Left \(max(0, viewModel.effectiveBoardSize - viewModel.queenPositions.count))")
+                Text("Left \(max(0, viewModel.boardSize - viewModel.queenPositions.count))")
             }
             .font(.subheadline)
             
