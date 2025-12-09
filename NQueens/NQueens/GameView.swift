@@ -20,6 +20,7 @@ struct GameView: View {
     @State private var lastElapsed: TimeInterval?
     
     @State private var bestTimes: [Int: TimeInterval] = [:]
+    @State private var shakeValue: CGFloat = 0
     
     private let timer = Timer.publish(every: 1, on : .main, in: .common).autoconnect()
     
@@ -79,7 +80,7 @@ struct GameView: View {
                     ChessBoardView(moves: currentBoard,
                                    queens: queenPositions) { x, y in
                         handleTap(x: x, y: y, game: game)
-                    }
+                    }.modifier(ShakeEffect(animatableData: shakeValue))
                 } else {
                     VStack {
                         Text("Choose a board size and tap 'New Game' to start.")
@@ -141,7 +142,9 @@ struct GameView: View {
             queenPositions = result.occupiedPositions
             checkIfWin()
         } catch {
-            // shake
+            withAnimation(.default) {
+                shakeValue += 1
+            }
         }
     }
     
