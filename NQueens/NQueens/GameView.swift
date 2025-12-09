@@ -131,6 +131,7 @@ struct GameView: View {
             let result = game.remove(at: position)
             currentBoard = result.newBoard
             queenPositions = result.occupiedPositions
+            SoundManager.shared.playSound(fileName: "whoosh-cinematic")
             return
         }
         
@@ -140,11 +141,13 @@ struct GameView: View {
             let result = try game.place(figure: QueenFigure(position: position))
             currentBoard = result.newBoard
             queenPositions = result.occupiedPositions
+            SoundManager.shared.playSound(fileName: "ui-click")
             checkIfWin()
         } catch {
             withAnimation(.default) {
                 shakeValue += 1
             }
+            SoundManager.shared.playSound(fileName: "error")
         }
     }
     
@@ -218,6 +221,7 @@ struct GameView: View {
             bestTimes[effectiveBoardSize] = elapsed
         }
         saveBestTimes()
+        SoundManager.shared.playSound(fileName: "level-up")
         shouldShowWinScreen = true
     }
 }

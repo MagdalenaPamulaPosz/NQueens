@@ -13,7 +13,7 @@ class SoundManager {
     private var player: AVAudioPlayer?
     
     func playSound(fileName: String) {
-        guard let url = Bundle.main.url(forResource: fileName, withExtension: "wav") else { return }
+        guard let url = Bundle.main.url(forResource: fileName, withExtension: "mp3") else { return }
         
         do {
             player = try AVAudioPlayer(contentsOf: url)
