@@ -6,30 +6,88 @@
 //
 
 import XCTest
+@testable import NQueens
 
-final class NQueensTests: XCTestCase {
+final class GameEngineTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
+    func testInitialBoardIsEmpty() {
+        let engine = GameEngineImpl(boardSize: 4)
+        XCTAssertEqual(engine.currentBoard.count, 4)
+        XCTAssertTrue(engine.occupiedPosistions.isEmpty)
+        
+        for row in engine.currentBoard {
+            XCTAssertTrue(row.allSatisfy { $0 == 0 })
         }
     }
+    
+    func testPlaceFirstQueenMarksAttackedSquares() throws {
+        let engine = GameEngineImpl(boardSize: 4)
+        
+        let result = try engine.place(figure: QueenFigure(position: Position(x: 1, y: 1)))
+        
+        XCTAssertEqual(result.occupiedPositions.count, 1)
+        XCTAssertEqual(result.occupiedPositions.first, Position(x: 1, y: 1))
+        
+        let board = result.newBoard
+        
+        for i in 0..<4 {
+            if i != 1 {
+                XCTAssertEqual(board[1][i], 1)
+                XCTAssertEqual(board[i][1], 1)
+            }
+        }
+        
+        // diagonal checks
+        XCTAssertEqual(board[0][0], 1)
+        XCTAssertEqual(board[2][2], 1)
+        
+        // anti-diagonal checks
+        XCTAssertEqual(board[0][2], 1)
+        XCTAssertEqual(board[2][0], 1)
+    }
 
+    func testCannotPlaceOnOccupiedSquare() throws {
+        let engine = GameEngineImpl(boardSize: 4)
+        
+        let pos = Position(x: 1, y: 1)
+        _ = try engine.place(figure: QueenFigure(position: pos))
+        
+        XCTAssertThrowsError(try engine.place(figure: QueenFigure(position: pos))) { error in
+            guard let placementError = error as? PlacementError else {
+                XCTFail("error: \(error)")
+                return
+            }
+            XCTAssertEqual(placementError, .occupied)
+        }
+    }
+    
+    func testRemoveQueenRecomputesAttacks() throws {
+        let engine = GameEngineImpl(boardSize: 4)
+        
+        let pos1 = Position(x: 0, y: 0)
+        let pos2 = Position(x: 3, y: 3)
+        
+        try engine.place(figure: QueenFigure(position: pos1))
+        try engine.place(figure: QueenFigure(position: pos2))
+        
+        let result = engine.remove(at: pos1)
+        
+        XCTAssertEqual(result.occupiedPositions.count, 1)
+        XCTAssertEqual(result.occupiedPositions.first, pos2)
+        
+        let board = result.newBoard
+        XCTAssertEqual(board[0][2], 0)
+    }
+
+    func testResetClearsBoardAndFigures() throws {
+        let engine = GameEngineImpl(boardSize: 4)
+        _ = try engine.place(figure: QueenFigure(position: Position(x: 1, y: 1)))
+        
+        engine.reset()
+        
+        XCTAssertTrue(engine.occupiedPosistions.isEmpty)
+        for row in engine.currentBoard {
+            XCTAssertTrue(row.allSatisfy { $0 == 0 })
+        }
+    }
 }
