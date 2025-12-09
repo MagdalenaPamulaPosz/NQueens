@@ -48,7 +48,6 @@ struct WinScreenView: View {
                         .font(.headline)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
-                        .background(Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .padding(.top, 20)
