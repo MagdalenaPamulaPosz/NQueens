@@ -147,6 +147,9 @@ struct GameView: View {
             withAnimation(.default) {
                 shakeValue += 1
             }
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.error)
+            
             SoundManager.shared.playSound(fileName: "error")
         }
     }
@@ -221,7 +224,12 @@ struct GameView: View {
             bestTimes[effectiveBoardSize] = elapsed
         }
         saveBestTimes()
+        
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+        
         SoundManager.shared.playSound(fileName: "level-up")
+        
         shouldShowWinScreen = true
     }
 }
