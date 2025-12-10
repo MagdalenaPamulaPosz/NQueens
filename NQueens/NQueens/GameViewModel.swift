@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 final class GameViewModel: ObservableObject {
-    @Published var game: GameEngineImpl?
+    @Published var game: GameEngine?
     @Published var currentBoard: [[Int]] = []
     @Published var queenPositions: [Position] = []
     
@@ -79,7 +79,7 @@ final class GameViewModel: ObservableObject {
         let clamped = max(4, min(boardSize, maxBoardSize))
         boardSize = clamped
         
-        let newGame = GameEngineImpl(boardSize: boardSize)
+        let newGame = GameEngine(boardSize: boardSize)
         game = newGame
         currentBoard = newGame.currentBoard
         queenPositions = []

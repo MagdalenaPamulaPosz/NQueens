@@ -11,7 +11,7 @@ import XCTest
 final class GameEngineTests: XCTestCase {
 
     func testInitialBoardIsEmpty() {
-        let engine = GameEngineImpl(boardSize: 4)
+        let engine = GameEngine(boardSize: 4)
         XCTAssertEqual(engine.currentBoard.count, 4)
         XCTAssertTrue(engine.occupiedPosistions.isEmpty)
         
@@ -21,7 +21,7 @@ final class GameEngineTests: XCTestCase {
     }
     
     func testPlaceFirstQueenMarksAttackedSquares() throws {
-        let engine = GameEngineImpl(boardSize: 4)
+        let engine = GameEngine(boardSize: 4)
         
         let result = try engine.place(figure: QueenFigure(position: Position(x: 1, y: 1)))
         
@@ -47,7 +47,7 @@ final class GameEngineTests: XCTestCase {
     }
 
     func testCannotPlaceOnOccupiedSquare() throws {
-        let engine = GameEngineImpl(boardSize: 4)
+        let engine = GameEngine(boardSize: 4)
         
         let pos = Position(x: 1, y: 1)
         _ = try engine.place(figure: QueenFigure(position: pos))
@@ -62,7 +62,7 @@ final class GameEngineTests: XCTestCase {
     }
     
     func testRemoveQueenRecomputesAttacks() throws {
-        let engine = GameEngineImpl(boardSize: 4)
+        let engine = GameEngine(boardSize: 4)
         
         let pos1 = Position(x: 0, y: 0)
         let pos2 = Position(x: 3, y: 1)
@@ -80,7 +80,7 @@ final class GameEngineTests: XCTestCase {
     }
 
     func testResetClearsBoardAndFigures() throws {
-        let engine = GameEngineImpl(boardSize: 4)
+        let engine = GameEngine(boardSize: 4)
         _ = try engine.place(figure: QueenFigure(position: Position(x: 1, y: 1)))
         
         engine.reset()

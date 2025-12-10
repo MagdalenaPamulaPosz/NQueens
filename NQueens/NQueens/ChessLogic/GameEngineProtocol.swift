@@ -14,7 +14,7 @@ struct PlacementResult {
     let occupiedPositions: [Position]
 }
 
-protocol GameEngine {
+protocol GameEngineProtocol {
     init(boardSize: Int)
     
     var currentBoard: [[Int]] { get }
@@ -31,7 +31,7 @@ struct Position: Equatable {
     let y: Int
 }
 
-class GameEngineImpl: GameEngine {
+class GameEngine: GameEngineProtocol {
     var figures: [Figure] = []
     var boardMatrix: [[Int]]
     
