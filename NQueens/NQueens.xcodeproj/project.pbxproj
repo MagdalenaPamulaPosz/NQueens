@@ -40,11 +40,6 @@
 			path = NQueensTests;
 			sourceTree = "<group>";
 		};
-		0A864C9B2EE31D4F00CE0AFA /* NQueensUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NQueensUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +72,6 @@
 			children = (
 				0A864C822EE31D4E00CE0AFA /* NQueens */,
 				0A864C912EE31D4F00CE0AFA /* NQueensTests */,
-				0A864C9B2EE31D4F00CE0AFA /* NQueensUITests */,
 				0A864C812EE31D4E00CE0AFA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -152,9 +146,6 @@
 			);
 			dependencies = (
 				0A864C9A2EE31D4F00CE0AFA /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				0A864C9B2EE31D4F00CE0AFA /* NQueensUITests */,
 			);
 			name = NQueensUITests;
 			packageProductDependencies = (
