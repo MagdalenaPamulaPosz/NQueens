@@ -58,3 +58,10 @@ Includes tests for:
 1. Open the project in XCode.
 2. Choose a simulaor or an external device (iPhone or iPad).
 3. Run it with `⌘R`.
+
+---
+
+## How to run tests
+
+1. Open the project in XCode.
+2. Run it with **Product → Test** or `⌘U`.
