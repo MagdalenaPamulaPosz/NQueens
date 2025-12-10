@@ -1,3 +1,10 @@
+
+
+
+https://github.com/user-attachments/assets/c47fa906-fa31-4007-bc19-d10273879a50
+
+
+
 # NQueens
 An iOS application where the player plays a puzzle game based on the N-Queens problem. The user’s goal is to place n queens on an nxn chessboard such that no two queens threaten each other (no same row, column, or diagonal).
 
