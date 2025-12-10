@@ -26,8 +26,7 @@ struct GameView: View {
                 viewModel.tick(now: date)
             }
             .sheet(isPresented: $viewModel.shouldShowWinScreen) {
-                WinScreenView(boardSize: viewModel.effectiveBoardSize,
-                              elapsed: viewModel.lastElapsed,
+                WinScreenView(elapsed: viewModel.lastElapsed,
                               bestTime: viewModel.bestTimes[viewModel.effectiveBoardSize]) {
                     viewModel.newGame()
                     viewModel.shouldShowWinScreen = false
@@ -51,12 +50,12 @@ struct GameView: View {
     
     private var statusSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Place \(viewModel.boardSize) queens on the board. None of them can attack each other")
+            Text("Place \(viewModel.effectiveBoardSize) queens on the board. None of them can attack each other")
                 .font(.subheadline)
             
             HStack(spacing: 12) {
                 Text("Placed \(viewModel.queenPositions.count)")
-                Text("Left \(max(0, viewModel.boardSize - viewModel.queenPositions.count))")
+                Text("Left \(max(0, viewModel.effectiveBoardSize - viewModel.queenPositions.count))")
             }
             .font(.subheadline)
             

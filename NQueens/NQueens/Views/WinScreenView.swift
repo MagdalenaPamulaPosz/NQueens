@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct WinScreenView: View {
-    let boardSize: Int
     let elapsed: TimeInterval?
     let bestTime: TimeInterval?
-    
     let onPlayAgain: () -> Void
     
     @State private var animate = false

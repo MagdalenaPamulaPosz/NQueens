@@ -17,16 +17,18 @@ struct ChessBoardView: View {
     }
     
     private var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible()), count: size)
+        Array(repeating: GridItem(.flexible(), spacing: spacing), count: size)
     }
+    
+    private let spacing: CGFloat = 2
     
     var body: some View {
         GeometryReader { geometry in
-            let cellSize = geometry.size.width / CGFloat(size)
+            let cellSize = (geometry.size.width - spacing * CGFloat(size - 1)) / CGFloat(size)
             
             LazyVGrid(
                 columns: columns,
-                spacing: 2
+                spacing: spacing
             ) {
                 ForEach(0..<size * size, id: \.self) { index in
                     let i = index / size

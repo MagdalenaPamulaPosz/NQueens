@@ -15,16 +15,17 @@ struct ChessSquareView: View {
     let cellSize: CGFloat
     let onTap: () -> Void
     
+    private var backgroundColor: Color {
+        if isMove {
+            return .red.opacity(0.45)
+        } else if (row + column).isMultiple(of: 2) {
+            return .gray.opacity(0.3)
+        } else {
+            return .gray.opacity(0.1)
+        }
+    }
+    
     var body: some View {
-        let backgroundColor: Color = {
-            if isMove {
-                return .red.opacity(0.45)
-            } else if (row + column).isMultiple(of: 2) {
-                return .gray.opacity(0.3)
-            } else {
-                return .gray.opacity(0.1)
-            }
-        }()
         
         ZStack {
             Rectangle()
@@ -37,7 +38,7 @@ struct ChessSquareView: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.6),
                            value: isQueen)
         }
-        .aspectRatio(1, contentMode: .fit)
+        .frame(width: cellSize, height: cellSize)
         .onTapGesture {
             onTap()
         }
