@@ -16,7 +16,7 @@ final class GameViewModel: ObservableObject {
     
     @Published var boardSize: Int = 4
     @Published var shouldShowWinScreen = false
-    @Published var knightsMode: Bool = false
+    @Published var figureType: FigureType = .queen
     
     @Published var startDate: Date?
     @Published private var now = Date()
@@ -62,7 +62,7 @@ final class GameViewModel: ObservableObject {
         guard figurePositions.count < effectiveBoardSize else { return }
         
         do {
-            let figure: Figure = knightsMode ? KnightFigure(position: position) : QueenFigure(position: position)
+            let figure = makeFigure(at: position)
             let result = try game.place(figure: figure)
             currentBoard = result.newBoard
             figurePositions = result.occupiedPositions
@@ -124,6 +124,15 @@ final class GameViewModel: ObservableObject {
         feedbackProvider.playWin()
         
         shouldShowWinScreen = true
+    }
+    
+    private func makeFigure(at position: Position) -> Figure {
+        switch figureType {
+        case .queen:
+            return QueenFigure(position: position)
+        case .knight:
+            return KnightFigure(position: position)
+        }
     }
     
     // MARK: Best times handling

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ChessBoardView: View {
     let moves: [[Int]]
-    let queens: [Position]
-    let knightsMode: Bool
+    let figures: [Position]
+    let figureSymbol: String
     let onTap: (Int, Int) -> Void
     
     private var size: Int {
@@ -35,15 +35,15 @@ struct ChessBoardView: View {
                     let i = index / size
                     let j = index % size
                     
-                    let isQueen = queens.contains(where: { $0.x == i && $0.y == j })
+                    let hasFigure = figures.contains(where: { $0.x == i && $0.y == j })
                     let isMove = moves[i][j] == 1
                     
                     ChessSquareView(row: i,
                                     column: j,
-                                    isQueen: isQueen,
+                                    hasFigure: hasFigure,
                                     isMove: isMove,
                                     cellSize: cellSize,
-                                    knightsMode: knightsMode) {
+                                    figureSymbol: figureSymbol) {
                         onTap(i, j)
                     }
                 }

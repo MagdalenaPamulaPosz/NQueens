@@ -10,10 +10,10 @@ import SwiftUI
 struct ChessSquareView: View {
     let row: Int
     let column: Int
-    let isQueen: Bool
+    let hasFigure: Bool
     let isMove: Bool
     let cellSize: CGFloat
-    let knightsMode: Bool
+    let figureSymbol: String
     let onTap: () -> Void
     
     private var backgroundColor: Color {
@@ -32,12 +32,12 @@ struct ChessSquareView: View {
             Rectangle()
                 .fill(backgroundColor)
             
-            Text(knightsMode ? "K" : "♛")
+            Text(figureSymbol)
                 .font(.system(size: cellSize * 0.7))
-                .scaleEffect(isQueen ? 1.0 : 0.5)
-                .opacity(isQueen ? 1 : 0)
+                .scaleEffect(hasFigure ? 1.0 : 0.5)
+                .opacity(hasFigure ? 1 : 0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.6),
-                           value: isQueen)
+                           value: hasFigure)
         }
         .frame(width: cellSize, height: cellSize)
         .onTapGesture {
