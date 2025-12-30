@@ -13,6 +13,7 @@ struct ChessSquareView: View {
     let isQueen: Bool
     let isMove: Bool
     let cellSize: CGFloat
+    let knightsMode: Bool
     let onTap: () -> Void
     
     private var backgroundColor: Color {
@@ -31,7 +32,7 @@ struct ChessSquareView: View {
             Rectangle()
                 .fill(backgroundColor)
             
-            Text("♛")
+            Text(knightsMode ? "K" : "♛")
                 .font(.system(size: cellSize * 0.7))
                 .scaleEffect(isQueen ? 1.0 : 0.5)
                 .opacity(isQueen ? 1 : 0)

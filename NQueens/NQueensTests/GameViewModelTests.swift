@@ -20,7 +20,7 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertNotNil(vm.game)
         XCTAssertEqual(vm.effectiveBoardSize, 4)
         XCTAssertEqual(vm.currentBoard.count, 4)
-        XCTAssertTrue(vm.queenPositions.isEmpty)
+        XCTAssertTrue(vm.figurePositions.isEmpty)
         XCTAssertNotNil(vm.startDate)
         XCTAssertNil(vm.lastElapsed)
     }
@@ -33,11 +33,11 @@ final class GameViewModelTests: XCTestCase {
         vm.newGame()
 
         vm.handleTap(x: 0, y: 0)
-        XCTAssertEqual(vm.queenPositions.count, 1)
+        XCTAssertEqual(vm.figurePositions.count, 1)
 
         vm.restart()
         
-        XCTAssertEqual(vm.queenPositions.count, 0)
+        XCTAssertEqual(vm.figurePositions.count, 0)
         XCTAssertNotNil(vm.startDate)
         XCTAssertNil(vm.lastElapsed)
         
@@ -54,7 +54,7 @@ final class GameViewModelTests: XCTestCase {
         vm.newGame()
         
         vm.handleTap(x: 0, y: 0)
-        XCTAssertEqual(vm.queenPositions.count, 1)
+        XCTAssertEqual(vm.figurePositions.count, 1)
         XCTAssertEqual(feedbackProvider.placeCount, 1)
     }
     
@@ -66,11 +66,11 @@ final class GameViewModelTests: XCTestCase {
         vm.newGame()
 
         vm.handleTap(x: 0, y: 0)
-        XCTAssertEqual(vm.queenPositions.count, 1)
+        XCTAssertEqual(vm.figurePositions.count, 1)
         XCTAssertEqual(feedbackProvider.placeCount, 1)
 
         vm.handleTap(x: 0, y: 0)
-        XCTAssertEqual(vm.queenPositions.count, 0)
+        XCTAssertEqual(vm.figurePositions.count, 0)
         XCTAssertEqual(feedbackProvider.removeCount, 1)
     }
     
@@ -82,14 +82,14 @@ final class GameViewModelTests: XCTestCase {
         vm.newGame()
         
         vm.handleTap(x: 0, y: 0)
-        XCTAssertEqual(vm.queenPositions.count, 1)
+        XCTAssertEqual(vm.figurePositions.count, 1)
         XCTAssertEqual(feedbackProvider.placeCount, 1)
         
         let previousShake = vm.shakeValue
         
         vm.handleTap(x: 0, y: 1)
         
-        XCTAssertEqual(vm.queenPositions.count, 1)
+        XCTAssertEqual(vm.figurePositions.count, 1)
         XCTAssertTrue(vm.shakeValue > previousShake)
         XCTAssertEqual(feedbackProvider.errorCount, 1)
         XCTAssertEqual(feedbackProvider.errorNotifications, 1)
@@ -107,7 +107,7 @@ final class GameViewModelTests: XCTestCase {
         vm.handleTap(x: 2, y: 0)
         vm.handleTap(x: 3, y: 2)
         
-        XCTAssertEqual(vm.queenPositions.count, 4)
+        XCTAssertEqual(vm.figurePositions.count, 4)
         XCTAssertTrue(vm.shouldShowWinScreen)
         XCTAssertNotNil(vm.lastElapsed)
         

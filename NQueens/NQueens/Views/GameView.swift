@@ -50,12 +50,12 @@ struct GameView: View {
     
     private var statusSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Place \(viewModel.effectiveBoardSize) queens on the board. None of them can attack each other")
+            Text("Place \(viewModel.effectiveBoardSize) figures on the board. None of them can attack each other")
                 .font(.subheadline)
             
             HStack(spacing: 12) {
-                Text("Placed \(viewModel.queenPositions.count)")
-                Text("Left \(max(0, viewModel.effectiveBoardSize - viewModel.queenPositions.count))")
+                Text("Placed \(viewModel.figurePositions.count)")
+                Text("Left \(max(0, viewModel.effectiveBoardSize - viewModel.figurePositions.count))")
             }
             .font(.subheadline)
             
@@ -67,6 +67,10 @@ struct GameView: View {
             }
             .font(.subheadline)
             .foregroundStyle(.secondary)
+            
+            Toggle("Play knights", isOn: $viewModel.knightsMode)
+                .font(.caption)
+                .disabled(viewModel.game != nil)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -93,7 +97,8 @@ struct GameView: View {
             if viewModel.game != nil {
                 ChessBoardView(
                     moves: viewModel.currentBoard,
-                    queens: viewModel.queenPositions) { x, y in
+                    queens: viewModel.figurePositions,
+                    knightsMode: viewModel.knightsMode) { x, y in
                     viewModel.handleTap(x: x, y: y)
                 }
                 .modifier(ShakeEffect(animatableData: viewModel.shakeValue))

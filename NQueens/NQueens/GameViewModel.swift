@@ -12,10 +12,11 @@ import SwiftUI
 final class GameViewModel: ObservableObject {
     @Published var game: GameEngine?
     @Published var currentBoard: [[Int]] = []
-    @Published var queenPositions: [Position] = []
+    @Published var figurePositions: [Position] = []
     
     @Published var boardSize: Int = 4
     @Published var shouldShowWinScreen = false
+    @Published var knightsMode: Bool = false
     
     @Published var startDate: Date?
     @Published private var now = Date()
@@ -50,20 +51,21 @@ final class GameViewModel: ObservableObject {
         guard let game = game else { return }
         let position = Position(x: x, y: y)
         
-        if queenPositions.contains(where: { $0 == position }) {
+        if figurePositions.contains(where: { $0 == position }) {
             let result = game.remove(at: position)
             currentBoard = result.newBoard
-            queenPositions = result.occupiedPositions
+            figurePositions = result.occupiedPositions
             feedbackProvider.playRemove()
             return
         }
         
-        guard queenPositions.count < effectiveBoardSize else { return }
+        guard figurePositions.count < effectiveBoardSize else { return }
         
         do {
-            let result = try game.place(figure: QueenFigure(position: position))
+            let figure: Figure = knightsMode ? KnightFigure(position: position) : QueenFigure(position: position)
+            let result = try game.place(figure: figure)
             currentBoard = result.newBoard
-            queenPositions = result.occupiedPositions
+            figurePositions = result.occupiedPositions
             feedbackProvider.playPlace()
             checkIfWin()
         } catch {
@@ -82,7 +84,7 @@ final class GameViewModel: ObservableObject {
         let newGame = GameEngine(boardSize: boardSize)
         game = newGame
         currentBoard = newGame.currentBoard
-        queenPositions = []
+        figurePositions = []
         
         startDate = Date()
         lastElapsed = nil
@@ -92,14 +94,14 @@ final class GameViewModel: ObservableObject {
         guard let game = game else { return }
         game.reset()
         currentBoard = game.currentBoard
-        queenPositions = []
+        figurePositions = []
         
         startDate = Date()
         lastElapsed = nil
     }
     
     func checkIfWin() {
-        guard queenPositions.count == effectiveBoardSize else { return }
+        guard figurePositions.count == effectiveBoardSize else { return }
         finishGame()
     }
     

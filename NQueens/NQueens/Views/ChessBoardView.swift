@@ -10,6 +10,7 @@ import SwiftUI
 struct ChessBoardView: View {
     let moves: [[Int]]
     let queens: [Position]
+    let knightsMode: Bool
     let onTap: (Int, Int) -> Void
     
     private var size: Int {
@@ -41,7 +42,8 @@ struct ChessBoardView: View {
                                     column: j,
                                     isQueen: isQueen,
                                     isMove: isMove,
-                                    cellSize: cellSize) {
+                                    cellSize: cellSize,
+                                    knightsMode: knightsMode) {
                         onTap(i, j)
                     }
                 }
