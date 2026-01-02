@@ -16,7 +16,9 @@ final class GameViewModel: ObservableObject {
     
     @Published var boardSize: Int = 4
     @Published var shouldShowWinScreen = false
-    @Published var figureType: FigureType = .queen
+    @Published var knightsMode: Bool = false
+    // SECOND APPROACH
+    // @Published var figureType: FigureType = .queen
     
     @Published var startDate: Date?
     @Published private var now = Date()
@@ -127,13 +129,19 @@ final class GameViewModel: ObservableObject {
     }
     
     private func makeFigure(at position: Position) -> Figure {
-        switch figureType {
-        case .queen:
-            return QueenFigure(position: position)
-        case .knight:
-            return KnightFigure(position: position)
-        }
+        let figure: Figure = knightsMode ? KnightFigure(position: position) : QueenFigure(position: position)
+        return figure
     }
+    
+    // SECOND APPROACH
+//    private func makeFigure(at position: Position) -> Figure {
+//        switch figureType {
+//        case .queen:
+//            return QueenFigure(position: position)
+//        case .knight:
+//            return KnightFigure(position: position)
+//        }
+//    }
     
     // MARK: Best times handling
     

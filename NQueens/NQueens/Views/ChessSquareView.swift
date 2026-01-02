@@ -13,7 +13,9 @@ struct ChessSquareView: View {
     let hasFigure: Bool
     let isMove: Bool
     let cellSize: CGFloat
-    let figureSymbol: String
+    let knightsMode: Bool
+// SECOND APPROACH
+    // let figureSymbol: String
     let onTap: () -> Void
     
     private var backgroundColor: Color {
@@ -31,8 +33,9 @@ struct ChessSquareView: View {
         ZStack {
             Rectangle()
                 .fill(backgroundColor)
-            
-            Text(figureSymbol)
+            // SECOND APPROACH
+            // Text(figureSymbol)
+            Text(knightsMode ? "K" : "♛")
                 .font(.system(size: cellSize * 0.7))
                 .scaleEffect(hasFigure ? 1.0 : 0.5)
                 .opacity(hasFigure ? 1 : 0)

@@ -68,12 +68,18 @@ struct GameView: View {
             .font(.subheadline)
             .foregroundStyle(.secondary)
             
-            Picker("Figure type", selection: $viewModel.figureType) {
-                ForEach(FigureType.allCases) { type in
-                    Text(type.displayName).tag(type)
-                }
-            }
-            .pickerStyle(.segmented)
+            Toggle("Play knights", isOn: $viewModel.knightsMode)
+                .font(.caption)
+                .disabled(!viewModel.figurePositions.isEmpty)
+
+            // SECOND APPROACH
+//            Picker("Figure type", selection: $viewModel.figureType) {
+//                ForEach(FigureType.allCases) { type in
+//                    Text(type.displayName).tag(type)
+//                }
+//            }
+//            .pickerStyle(.segmented)
+//            .disabled(!viewModel.figurePositions.isEmpty)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -101,7 +107,9 @@ struct GameView: View {
                 ChessBoardView(
                     moves: viewModel.currentBoard,
                     figures: viewModel.figurePositions,
-                    figureSymbol: viewModel.figureType.symbol) { x, y in
+                    // SECOND APPROACH
+                    // figureSymbol: viewModel.figureType.symbol,
+                    knightsMode: viewModel.knightsMode) { x, y in
                     viewModel.handleTap(x: x, y: y)
                 }
                 .modifier(ShakeEffect(animatableData: viewModel.shakeValue))
